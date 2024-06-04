@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PSP General</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+            crossorigin="anonymous"
+        />
+        <style>
+            ins {
+                font-weight: bold;
+            }
+            label {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>PSP General (FIDO)</h1>
+        <label for="psp">支付服務商: </label>
+        <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
+        <div class="psp err"></div>
+        <label for="username">使用者名稱: </label>
+        <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
+        <div class="username err"></div>
+        <label for="account">使用者帳戶: </label>
+        <input type="text" id="account" value="<%= userInfo.account %>" disabled />
+        <div class="account err"></div>
+
+        <!-- 進階設定 -->
+        <button
+            class="btn btn-primary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+        >
+            進階設定
+        </button>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <ins>Authentication Settings</ins>
+                <!-- User Verification -->
+                <label for="optAuthUserVerification"> User Verification </label>
+                <select name="optAuthUserVerification" id="optAuthUserVerification">
+                    <option value="discouraged">Discouraged</option>
+                    <option value="preferred" selected>Preferred</option>
+                    <option value="required">Required</option>
+                </select>
+                <button class="btn btn-warning" onclick="location.reload();">重新設定</button>
+            </div>
+        </div>
+
+        <div>
+            <button class="btn btn-success" onclick="authenticate()">登入</button>
+        </div>
+    </body>
+    <!-- 引入 Bootstrap JS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+    <script>
+        async function authenticate() {
+            try {
+                let psp = document.getElementById("psp").value;
+                let account = document.getElementById("account").value;
+                let username = document.getElementById("username").value;
+                let authUserVerification = document.getElementById("optAuthUserVerification").value;
+
+                const { startAuthentication } = SimpleWebAuthnBrowser;
+                // GET authentication options from the endpoint that calls
+                // @simplewebauthn/server -> generateAuthenticationOptions()
+                const resp = await fetch("/psp_general/authenticate/options", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        psp,
+                        account,
+                        username,
+                        userVerification: authUserVerification,
+                    }),
+                });
+                // Pass the options to the authenticator and wait for a response
+                const asseRespJSON = await resp.json();
+                console.log("AUTHENTICATION OPTIONS");
+                console.log(JSON.stringify(asseRespJSON, null, 2));
+
+                const asseResp = await startAuthentication(asseRespJSON);
+                console.log("AUTHENTICATION RESPONSE");
+                console.log(JSON.stringify(asseResp, null, 2));
+
+                // POST the response to the endpoint that calls
+                // @simplewebauthn/server -> verifyAuthenticationResponse()
+                const verificationResp = await fetch("/psp_general/authenticate/result", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        asseResp,
+                        psp,
+                        account,
+                        username,
+                    }),
+                });
+                // Wait for the results of verification
+                const verificationJSON = await verificationResp.json();
+                if (verificationJSON && verificationJSON.verified) {
+                    window.alert("Authentication successful!");
+                    let domainName;
+                    let port;
+                    switch (psp) {
+                        case "psp1":
+                            domainName = "rp1.localhost";
+                            port = 3000;
+                            break;
+                        case "psp2":
+                            domainName = "rp2.localhost";
+                            port = 4000;
+                            break;
+                    }
+
+                    const response = await fetch(`https://${domainName}:${port}/${psp}/is_sca_verified`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ psp, account, isSCA: true }),
+                    });
+                    if (response.status == 200) {
+                        window.alert("二次身份驗證 已通過!");
+                        location.assign(`https://${domainName}:${port}/${psp}`);
+                    } else {
+                        const res = await response.json();
+                        throw new Error(res.message);
+                    }
+                } else {
+                    window.alert("二次身份驗證 失敗!");
+                    location.reload();
+                }
+            } catch (error) {
+                console.log(error.message);
+                window.alert(error.message);
+            }
+        }
+    </script>
+</html>
