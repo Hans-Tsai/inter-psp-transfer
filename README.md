@@ -29,12 +29,23 @@
 #### 系統認證
 ![系統認證流程](./images/fido_uaf_authentication_sequence_diagram.png)
 
+#### 二次身份驗證
+![二次身份驗證](./images/second_verification.png)
+
+#### 嚴格顧客驗證與跨機構轉帳
+![嚴格顧客驗證與跨機構轉帳](./images/sca_and_inter_psp_transfer.png)
+
 ## 目前進度
 - [x] 新的 SCA + inter-psp transfer 流程的系統實作
 
 ## 尚待完成
-- [ ] 針對需要在論文的 ch4 系統實作呈現的部分，前端畫面優化
+- [ ] 針對需要在論文的 ch4 系統實作呈現的部分，前端畫面優化 (可嘗試用 React 框架來改寫)
 - [ ] 針對需要在論文的 ch4 系統實作呈現的部分，作後端程式碼優化 (refactor)
+- [x] 修正 isVerified、嚴格顧客驗證相關的變數命名、API 名稱、DB schema => 二次身份驗證
+- [x] 修正 DB schema - Transfer 資料表的欄位名稱 (producer, consumer)
+- [x] 刪除 RPC 相關程式碼
+- [ ] 檢查 SCA + 跨機構轉帳功能的 bug 在哪
+- [ ] 優化 psp_general 的 SCA & 跨機構轉帳 頁面
 
 ## 參考文章
 - [MySQL 官方文件: 2PC: XA Transaction States](https://dev.mysql.com/doc/refman/8.4/en/xa-states.html)

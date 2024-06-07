@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PSP General</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+            crossorigin="anonymous"
+        />
+        <style>
+            body {
+                background-color: ivory;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                height: 100vh;
+                margin: 0;
+                padding-top: 20px;
+            }
+
+            ins {
+                font-weight: bold;
+            }
+            
+            label {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/psp_general">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">PSP General</li>
+            </ol>
+        </nav>
+
+        <div class="container">
+            <h2 class="my-4">嚴格顧客驗證</h2>
+            <table class="table_sca table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="table-warning" style="width: 30%;">支付服務商(psp): </th>
+                        <td id="psp"><%= params.psp %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-warning">使用者名稱(name): </th>
+                        <td id="username"><%= params.name %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-warning">使用者帳戶(account): </th>
+                        <td id="account"><%= params.account %></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 進階設定 -->
+            <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+            >
+                進階設定
+            </button>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <ins>Authentication Settings</ins>
+                    <!-- User Verification -->
+                    <label for="optAuthUserVerification"> User Verification </label>
+                    <select name="optAuthUserVerification" id="optAuthUserVerification">
+                        <option value="discouraged">Discouraged</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="required">Required</option>
+                    </select>
+                    <button class="btn btn-warning" onclick="location.reload();">重新設定</button>
+                </div>
+            </div>
+
+            <h2 class="my-4">跨機構轉帳</h2>
+            <table class="table_inter_psp_transfer table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="table-success" style="width: 30%;">來源支付服務商(fromPSP): </th>
+                        <td id="fromPSP"><%= params.fromPSP %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-success">來源支付服務商的使用者帳號(from): </th>
+                        <td id="from"><%= params.from %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-success">目標支付服務商(toPSP):</th>
+                        <td id="toPSP"><%= params.toPSP %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-success">目標支付服務商的使用者帳號(to): </th>
+                        <td id="to"><%= params.to %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-success">當前餘額(balance): </th>
+                        <td id="balance"><%= params.balance %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-success">跨機構轉帳金額(amount): </th>
+                        <td id="amount"><%= params.amount %></td>
+                    </tr>
+                    <tr>
+                        <th class="table-success">備註(note): </th>
+                        <td id="note"><%= params.note %></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <button type="button" onclick="sca_inter_psp_transfer()">確認</button>
+            </div>
+        </div>
+
+    </body>
+    <!-- 引入 Bootstrap JS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+    <script>
+        async function sca_inter_psp_transfer() {
+            try {
+                // 嚴格顧客驗證 資訊
+                let psp = document.getElementById("psp").textContent;
+                let username = document.getElementById("username").textContent;
+                let account = document.getElementById("account").textContent;
+                let authUserVerification = document.getElementById("optAuthUserVerification").value;
+                // 跨機構轉帳 資訊
+                let fromPSP = document.getElementById("fromPSP").textContent;
+                let from = document.getElementById("from").textContent;
+                let toPSP = document.getElementById("toPSP").textContent;
+                let to = document.getElementById("to").textContent;
+                let balance = document.getElementById("balance").textContent;
+                let amount = document.getElementById("amount").textContent;
+                let note = document.getElementById("note").textContent;
+
+                const { startAuthentication } = SimpleWebAuthnBrowser;
+                // GET authentication options from the endpoint that calls
+                // @simplewebauthn/server -> generateAuthenticationOptions()
+                const resp = await fetch("/psp_general/sca_inter_psp_transfer/authenticate/options", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        psp,
+                        account,
+                        username,
+                        userVerification: authUserVerification,
+                        transaction_details: {
+                            fromPSP,
+                            from,
+                            toPSP,
+                            to,
+                            balance,
+                            amount,
+                            note,
+                        },
+                    }),
+                });
+                // Pass the options to the authenticator and wait for a response
+                const asseRespJSON = await resp.json();
+                console.log("AUTHENTICATION OPTIONS");
+                console.log(JSON.stringify(asseRespJSON, null, 2));
+
+                const asseResp = await startAuthentication(asseRespJSON);
+                console.log("AUTHENTICATION RESPONSE");
+                console.log(JSON.stringify(asseResp, null, 2));
+
+                // POST the response to the endpoint that calls
+                // @simplewebauthn/server -> verifyAuthenticationResponse()
+                const verificationResp = await fetch("/psp_general/sca_inter_psp_transfer/authenticate/result", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        asseResp,
+                        psp,
+                        account,
+                        username,
+                    }),
+                });
+                // Wait for the results of verification
+                const verificationJSON = await verificationResp.json();
+                if (!verificationJSON || !verificationJSON.verified) {
+                    throw new Error("嚴格顧客驗證 失敗!");
+                }
+
+                // 跨機構轉帳
+                const interPSPtransferResult = await fetch("/psp_general/sca_inter_psp_transfer", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        fromPSP,
+                        from,
+                        toPSP,
+                        to,
+                        balance,
+                        amount,
+                        note,
+                    }),
+                });
+                if (interPSPtransferResult.status == 200) {
+                    window.alert("跨機構轉帳 成功!");
+                    let domainName;
+                    let port;
+                    switch (psp) {
+                        case "psp1":
+                            domainName = "rp1.localhost";
+                            port = 3000;
+                            break;
+                        case "psp2":
+                            domainName = "rp2.localhost";
+                            port = 4000;
+                            break;
+                    }
+                    location.assign(`https://${domainName}:${port}/${psp}`);
+                } else {
+                    window.alert("跨機構轉帳 失敗!");
+                    location.reload();
+                }
+            } catch (error) {
+                // console.log(error.message);
+                window.alert(error.message);
+                location.reload();
+            }
+        }
+    </script>
+</html>
