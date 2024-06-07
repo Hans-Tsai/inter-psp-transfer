@@ -44,8 +44,8 @@
 - [x] 修正 isVerified、嚴格顧客驗證相關的變數命名、API 名稱、DB schema => 二次身份驗證
 - [x] 修正 DB schema - Transfer 資料表的欄位名稱 (producer, consumer)
 - [x] 刪除 RPC 相關程式碼
-- [ ] 檢查 SCA + 跨機構轉帳功能的 bug 在哪
-- [ ] 優化 psp_general 的 SCA & 跨機構轉帳 頁面
+- [x] 檢查 SCA + 跨機構轉帳功能的 bug 在哪
+- [x] 優化 psp_general 的 SCA & 跨機構轉帳 頁面
 
 ## 參考文章
 - [MySQL 官方文件: 2PC: XA Transaction States](https://dev.mysql.com/doc/refman/8.4/en/xa-states.html)
