@@ -71,22 +71,15 @@ const psp1_register_options_post = async (req, res) => {
             rpID: config.rp1.id,
             userID: account,
             userName: username,
-            // Don't prompt users for additional information about the authenticator
-            // (Recommended for smoother UX)
             attestationType: attestation,
-            // Prevent users from re-registering existing authenticators
             excludeCredentials: userAuthenticators.map((authenticator) => ({
                 id: base64url.toBuffer(authenticator.credentialID),
                 type: "public-key",
-                // Optional
                 transports: authenticator.transports,
             })),
-            // See "Guiding use of authenticators via authenticatorSelection" below
             authenticatorSelection: {
-                // Defaults
                 residentKey,
                 userVerification: user_verification,
-                // Optional
                 authenticatorAttachment: attachment,
             },
             supportedAlgorithmIDs: algorithms,
@@ -168,7 +161,6 @@ const psp1_authenticate_options_post = async (req, res) => {
         const options = await SimpleWebAuthnServer.generateAuthenticationOptions({
             rpID: config.rp1.id,
             userVerification,
-            // Require users to use a previously-registered authenticator
             allowCredentials: userAuthenticators.map((authenticator) => ({
                 id: base64url.toBuffer(authenticator.credentialID),
                 type: "public-key",
@@ -213,7 +205,7 @@ const psp1_authenticate_result_post = async (req, res) => {
         const userJwt = createToken({ account, username });
         res.cookie(`${username}_userJwt`, userJwt, {
             httpOnly: true,
-            maxAge: maxValidDuration * 1000, // 以毫秒為單位
+            maxAge: maxValidDuration * 1000,
         });
 
         res.status(200).json({ verified });

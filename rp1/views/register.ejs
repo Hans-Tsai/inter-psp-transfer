@@ -188,28 +188,19 @@
                 let regHints = document.getElementById("orderDisplay").textContent; // regHints 是字串，e.g. "" 或 "security-key,hybrid"
 
                 const { startRegistration } = SimpleWebAuthnBrowser;
-                // GET registration options from the endpoint that calls
-                // @simplewebauthn/server -> generateRegistrationOptions()
                 const resp = await fetch("/psp1/register/options", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         username,
-                        // e.g. 'preferred'
-                        user_verification: regUserVerification,
-                        // e.g. 'direct'
-                        attestation,
-                        // e.g. 'platform'
-                        attachment,
-                        // e.g. ['es256', 'rs256']
-                        algorithms: pubKeyAlgo,
-                        // e.g. 'preferred'
-                        discoverable_credential: discoverableCredential,
-                        // e.g. ['security-key', 'hybrid']
-                        hints: regHints,
+                        user_verification: regUserVerification, // e.g. 'preferred'
+                        attestation, // e.g. 'direct'
+                        attachment, // e.g. 'platform'
+                        algorithms: pubKeyAlgo, // e.g. ['es256', 'rs256']
+                        discoverable_credential: discoverableCredential, // e.g. 'preferred'
+                        hints: regHints, // e.g. ['security-key', 'hybrid']
                     }),
                 });
-                // Pass the options to the authenticator and wait for a response
                 const attRespJSON = await resp.json();
                 console.log('REGISTRATION OPTIONS');
                 console.log(JSON.stringify(attRespJSON, null, 2));
@@ -218,8 +209,6 @@
                 console.log('REGISTRATION RESPONSE');
                 console.log(JSON.stringify(attResp, null, 2));
 
-                // POST the response to the endpoint that calls
-                // @simplewebauthn/server -> verifyRegistrationResponse()
                 const verificationResp = await fetch("/psp1/register/result", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -229,7 +218,6 @@
                         username: attRespJSON.user.name,
                     }),
                 });
-                // Wait for the results of verification
                 const verificationJSON = await verificationResp.json();
                 if (verificationJSON && verificationJSON.verified) {
                     window.alert("Registration successful!");

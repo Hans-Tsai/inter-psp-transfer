@@ -74,7 +74,6 @@
             <div class="collapse" id="collapseExample">
                 <div class="card card-body">
                     <h2>Authentication Settings</h2>
-                    <!-- User Verification -->
                     <label for="optAuthUserVerification"> User Verification </label>
                     <select name="optAuthUserVerification" id="optAuthUserVerification">
                         <option value="discouraged">Discouraged</option>
@@ -114,8 +113,6 @@
                 let authUserVerification = document.getElementById("optAuthUserVerification").value;
 
                 const { startAuthentication } = SimpleWebAuthnBrowser;
-                // GET authentication options from the endpoint that calls
-                // @simplewebauthn/server -> generateAuthenticationOptions()
                 const resp = await fetch("/psp1/authenticate/options", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -124,7 +121,6 @@
                         userVerification: authUserVerification,
                     }),
                 });
-                // Pass the options to the authenticator and wait for a response
                 const asseRespJSON = await resp.json();
                 console.log('AUTHENTICATION OPTIONS');
                 console.log(JSON.stringify(asseRespJSON, null, 2));
@@ -133,8 +129,6 @@
                 console.log('AUTHENTICATION RESPONSE');
                 console.log(JSON.stringify(asseResp, null, 2));
 
-                // POST the response to the endpoint that calls
-                // @simplewebauthn/server -> verifyAuthenticationResponse()
                 const verificationResp = await fetch("/psp1/authenticate/result", {
                     method: "POST",
                     headers: {
@@ -145,7 +139,6 @@
                         username,
                     }),
                 });
-                // Wait for the results of verification
                 const verificationJSON = await verificationResp.json();
                 if (verificationJSON && verificationJSON.verified) {
                     window.alert("Authentication successful!");
