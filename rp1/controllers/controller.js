@@ -37,8 +37,7 @@ const psp1_register_get = async (req, res) => {
 
 const psp1_register_options_post = async (req, res) => {
     try {
-        let { username, user_verification, attestation, attachment, algorithms, discoverable_credential, hints } =
-            req.body;
+        let { username, user_verification, attestation, attachment, algorithms, discoverable_credential, hints } = req.body;
         const account = await UserModel.generateAccount();
         const userAuthenticators = await AuthenticatorModel.getUserAuthenticators({ account });
         let residentKey = "";

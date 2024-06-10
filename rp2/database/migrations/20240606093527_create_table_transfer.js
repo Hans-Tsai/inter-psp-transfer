@@ -6,9 +6,9 @@ exports.up = function (knex) {
     return knex.schema.createTable("transfer", (table) => {
         table.increments("id").primary();
         table.string("fromPSP").notNullable();
-        table.string("from").notNullable().references("account").inTable("user");
+        table.string("from").notNullable();
         table.string("toPSP").notNullable();
-        table.string("to").notNullable().references("account").inTable("user");
+        table.string("to").notNullable();
         table.integer("amount").notNullable();
         table.string("note", 30).notNullable().defaultTo("無");
         // XA Transaction Id
