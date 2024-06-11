@@ -9,119 +9,158 @@
             crossorigin="anonymous"
         />
         <style>
-            body {
+            /* 確保 body 和 html 填滿整個頁面 */
+            body, html {
                 background-color: ivory;
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            /* 中心容器 */
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 120%; /* 調整此處來控制最大寬度 */
+                max-width: 800px; /* 最大寬度，可根據需要調整 */
+                margin: 0 auto;
+            }
+
+            /* 設置水平排列 */
+            .horizontal-form {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .horizontal-form label {
+                margin-right: 10px;
+            }
+            
+
+            button, input, select {
+                margin: 10px;
+            }
+
+            label {
+                font-weight: bold;
             }
 
             ins {
                 font-weight: bold;
             }
-            
-            label {
-                font-weight: bold;
-            }
         </style>
     </head>
     <body>
-        <h1>PSP General (FIDO)</h1>
-        <label for="psp">支付服務商: </label>
-        <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
-        <div class="psp err"></div>
-        <label for="username">使用者名稱: </label>
-        <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
-        <div class="username err"></div>
-        <label for="account">使用者帳戶: </label>
-        <input type="text" id="account" value="<%= userInfo.account %>" disabled />
-        <div class="account err"></div>
-
-        <!-- 進階設定 -->
-        <button
-            class="btn btn-primary"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseExample"
-            aria-expanded="false"
-            aria-controls="collapseExample"
-        >
-            進階設定
-        </button>
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body">
-                <ins>Registration Settings</ins>
-                <!-- User Verification -->
-                <label for="optRegUserVerification"> User Verification </label>
-                <select name="optRegUserVerification" id="optRegUserVerification">
-                    <option value="discouraged">Discouraged</option>
-                    <option value="preferred" selected>Preferred</option>
-                    <option value="required">Required</option>
-                </select>
-                <p>
-                    Whether a biometric/PIN check is required or not. This filters out security keys not having this
-                    capability.
-                </p>
-
-                <!-- Attachment -->
-                <label for="attachment"> Attachment </label>
-                <select name="attachment" id="attachment">
-                    <option>All Supported</option>
-                    <option value="cross-platform">Cross-Platform</option>
-                    <option value="platform" selected>Platform</option>
-                </select>
-                <p>Describe authenticators' attachment modalities</p>
-
-                <!-- Discoverable Credential -->
-                <label for="discoverableCredential"> Discoverable Credential </label>
-                <select name="discoverableCredential" id="discoverableCredential">
-                    <option value="discouraged">Discouraged</option>
-                    <option value="preferred" selected>Preferred</option>
-                    <option value="required">Required</option>
-                </select>
-                <p>
-                    A "discoverable" credential can be selected using `authenticate(...)` without providing credential
-                    IDs. Instead, a native pop-up will appear for user selection. This may have an impact on the
-                    "passkeys" user experience and syncing behavior of the key.
-                </p>
-
-                <!-- Attestation dropdown -->
-                <label for="attestation"> Attestation </label>
-                <select name="attestation" id="attestation">
-                    <option value="none" selected>None</option>
-                    <option value="direct">Direct</option>
-                </select>
-                <p>
-                    The attestation data that is returned from the authenticator has information that could be used to
-                    track users. This option allows servers to indicate how important the attestation data is to this
-                    registration event.
-                </p>
-
-                <!-- Public Key Algorithms -->
-                <label for="pubKeyAlgo"> Public Key Algorithms (Multi-select enabled) </label>
-                <div class="form-check" name="pubKeyAlgo" id="pubKeyAlgo">
-                    <input type="checkbox" value="-8" id="optAlgEd25519" /> Ed25519
-                    <input type="checkbox" value="-7" id="optAlgES256" checked /> ES256
-                    <input type="checkbox" value="-257" id="optAlgRS256" checked /> RS256
-                </div>
-                <p>This is an array of objects describing what public key types are acceptable to a server.</p>
-
-                <!-- Registration Hints (most to least preferred) -->
-                <label for="registrationHints"> Registration Hints (Optional, from most to least preferred) </label>
-                <div class="form-check" name="registrationHints" id="registrationHints">
-                    <input type="checkbox" value="security-key" id="securityKey" /> Security Key
-                    <input type="checkbox" value="client-device" id="clientDevice" /> Client Device
-                    <input type="checkbox" value="hybrid" id="hybrid" /> Hybrid
-                </div>
-                <p>
-                    WebAuthn Relying Parties may use this enumeration to communicate hints to the user-agent about how a
-                    request may be best completed.
-                </p>
-                <p>Order: <span id="orderDisplay" style="color: lightgrey"></span></p>
-
-                <button class="btn btn-warning" onclick="location.reload();">重新設定</button>
+        <div class="container">
+            <h1>PSP General (二次身份驗證)</h1>
+            <div class="horizontal-form">
+                <label for="psp">支付服務商: </label>
+                <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
             </div>
-        </div>
+            <div class="horizontal-form">
+                <label for="username">使用者名稱: </label>
+                <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
+            </div>
+            <div class="horizontal-form">
+                <label for="account">使用者帳戶: </label>
+                <input type="text" id="account" value="<%= userInfo.account %>" disabled />
+            </div>
 
-        <div>
-            <button class="btn btn-success" onclick="register()">二次身份驗證-註冊</button>
+            <!-- 進階設定 -->
+            <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+            >
+                進階設定
+            </button>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <ins>Registration Settings</ins>
+                    <!-- User Verification -->
+                    <label for="optRegUserVerification"> User Verification </label>
+                    <select name="optRegUserVerification" id="optRegUserVerification">
+                        <option value="discouraged">Discouraged</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="required">Required</option>
+                    </select>
+                    <p>
+                        Whether a biometric/PIN check is required or not. This filters out security keys not having this
+                        capability.
+                    </p>
+
+                    <!-- Attachment -->
+                    <label for="attachment"> Attachment </label>
+                    <select name="attachment" id="attachment">
+                        <option>All Supported</option>
+                        <option value="cross-platform">Cross-Platform</option>
+                        <option value="platform" selected>Platform</option>
+                    </select>
+                    <p>Describe authenticators' attachment modalities</p>
+
+                    <!-- Discoverable Credential -->
+                    <label for="discoverableCredential"> Discoverable Credential </label>
+                    <select name="discoverableCredential" id="discoverableCredential">
+                        <option value="discouraged">Discouraged</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="required">Required</option>
+                    </select>
+                    <p>
+                        A "discoverable" credential can be selected using `authenticate(...)` without providing credential
+                        IDs. Instead, a native pop-up will appear for user selection. This may have an impact on the
+                        "passkeys" user experience and syncing behavior of the key.
+                    </p>
+
+                    <!-- Attestation dropdown -->
+                    <label for="attestation"> Attestation </label>
+                    <select name="attestation" id="attestation">
+                        <option value="none" selected>None</option>
+                        <option value="direct">Direct</option>
+                    </select>
+                    <p>
+                        The attestation data that is returned from the authenticator has information that could be used to
+                        track users. This option allows servers to indicate how important the attestation data is to this
+                        registration event.
+                    </p>
+
+                    <!-- Public Key Algorithms -->
+                    <label for="pubKeyAlgo"> Public Key Algorithms (Multi-select enabled) </label>
+                    <div class="form-check" name="pubKeyAlgo" id="pubKeyAlgo">
+                        <input type="checkbox" value="-8" id="optAlgEd25519" /> Ed25519
+                        <input type="checkbox" value="-7" id="optAlgES256" checked /> ES256
+                        <input type="checkbox" value="-257" id="optAlgRS256" checked /> RS256
+                    </div>
+                    <p>This is an array of objects describing what public key types are acceptable to a server.</p>
+
+                    <!-- Registration Hints (most to least preferred) -->
+                    <label for="registrationHints"> Registration Hints (Optional, from most to least preferred) </label>
+                    <div class="form-check" name="registrationHints" id="registrationHints">
+                        <input type="checkbox" value="security-key" id="securityKey" /> Security Key
+                        <input type="checkbox" value="client-device" id="clientDevice" /> Client Device
+                        <input type="checkbox" value="hybrid" id="hybrid" /> Hybrid
+                    </div>
+                    <p>
+                        WebAuthn Relying Parties may use this enumeration to communicate hints to the user-agent about how a
+                        request may be best completed.
+                    </p>
+                    <p>Order: <span id="orderDisplay" style="color: lightgrey"></span></p>
+
+                    <button class="btn btn-warning" onclick="location.reload();">重新設定</button>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-secondary" onclick="register()">註冊</button>
+            </div>
         </div>
     </body>
     <!-- 引入 Bootstrap JS -->

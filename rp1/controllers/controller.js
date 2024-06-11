@@ -109,8 +109,7 @@ const psp1_register_result_post = async (req, res) => {
         const { verified } = verification;
         if (verified) {
             const { registrationInfo } = verification;
-            const { credentialPublicKey, credentialID, counter, credentialDeviceType, credentialBackedUp } =
-                registrationInfo;
+            const { credentialPublicKey, credentialID, counter, credentialDeviceType, credentialBackedUp } = registrationInfo;
             const base64urlCredentialID = base64url.encode(credentialID);
             const base64urlCredentialPublicKey = base64url.encode(credentialPublicKey);
             try {
@@ -225,7 +224,7 @@ const psp1_logout_get = async (req, res) => {
     res.redirect("/psp1");
 };
 
-const psp1_is_sca_verified_post = async (req, res) => {
+const psp1_isVerified_post = async (req, res) => {
     try {
         const psp = req.body.psp;
         const account = req.body.account;
@@ -392,7 +391,7 @@ module.exports = {
     psp1_authenticate_options_post,
     psp1_authenticate_result_post,
     psp1_logout_get,
-    psp1_is_sca_verified_post,
+    psp1_isVerified_post,
     psp1_deposit_get,
     psp1_deposit_post,
     psp1_withdraw_get,

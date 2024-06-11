@@ -9,58 +9,93 @@
             crossorigin="anonymous"
         />
         <style>
-            body {
+            /* 確保 body 和 html 填滿整個頁面 */
+            body, html {
                 background-color: ivory;
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
             }
 
-            ins {
-                font-weight: bold;
+            /* 中心容器 */
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 120%; /* 調整此處來控制最大寬度 */
+                max-width: 800px; /* 最大寬度，可根據需要調整 */
+                margin: 0 auto;
+            }
+
+            /* 設置水平排列 */
+            .horizontal-form {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .horizontal-form label {
+                margin-right: 10px;
             }
             
+
+            button, input, select {
+                margin: 10px;
+            }
+
             label {
                 font-weight: bold;
             }
         </style>
     </head>
     <body>
-        <h1>PSP General (FIDO)</h1>
-        <label for="psp">支付服務商: </label>
-        <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
-        <div class="psp err"></div>
-        <label for="username">使用者名稱: </label>
-        <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
-        <div class="username err"></div>
-        <label for="account">使用者帳戶: </label>
-        <input type="text" id="account" value="<%= userInfo.account %>" disabled />
-        <div class="account err"></div>
-
-        <!-- 進階設定 -->
-        <button
-            class="btn btn-primary"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseExample"
-            aria-expanded="false"
-            aria-controls="collapseExample"
-        >
-            進階設定
-        </button>
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body">
-                <ins>Authentication Settings</ins>
-                <!-- User Verification -->
-                <label for="optAuthUserVerification"> User Verification </label>
-                <select name="optAuthUserVerification" id="optAuthUserVerification">
-                    <option value="discouraged">Discouraged</option>
-                    <option value="preferred" selected>Preferred</option>
-                    <option value="required">Required</option>
-                </select>
-                <button class="btn btn-warning" onclick="location.reload();">重新設定</button>
+        <div class="container">
+            <h1>PSP General (二次身份驗證)</h1>
+            <div class="horizontal-form">
+                <label for="psp">支付服務商: </label>
+                <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
             </div>
-        </div>
+            <div class="horizontal-form">
+                <label for="username">使用者名稱: </label>
+                <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
+            </div>
+            <div class="horizontal-form">
+                <label for="account">使用者帳戶: </label>
+                <input type="text" id="account" value="<%= userInfo.account %>" disabled />
+            </div>
 
-        <div>
-            <button class="btn btn-success" onclick="authenticate()">二次身份驗證-登入</button>
+            <!-- 進階設定 -->
+            <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+            >
+                進階設定
+            </button>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <ins>Authentication Settings</ins>
+                    <!-- User Verification -->
+                    <label for="optAuthUserVerification"> User Verification </label>
+                    <select name="optAuthUserVerification" id="optAuthUserVerification">
+                        <option value="discouraged">Discouraged</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="required">Required</option>
+                    </select>
+                    <button class="btn btn-warning" onclick="location.reload();">重新設定</button>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-secondary" onclick="authenticate()">登入</button>
+            </div>
         </div>
     </body>
     <!-- 引入 Bootstrap JS -->
@@ -131,7 +166,7 @@
                             break;
                     }
 
-                    const response = await fetch(`https://${domainName}:${port}/${psp}/is_sca_verified`, {
+                    const response = await fetch(`https://${domainName}:${port}/${psp}/isVerified`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

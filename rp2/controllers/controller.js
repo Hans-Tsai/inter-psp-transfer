@@ -235,7 +235,7 @@ const psp2_logout_get = async (req, res) => {
     res.redirect("/psp2");
 };
 
-const psp2_is_sca_verified_post = async (req, res) => {
+const psp2_isVerified_post = async (req, res) => {
     try {
         const psp = req.body.psp;
         const account = req.body.account;
@@ -402,7 +402,7 @@ module.exports = {
     psp2_authenticate_options_post,
     psp2_authenticate_result_post,
     psp2_logout_get,
-    psp2_is_sca_verified_post,
+    psp2_isVerified_post,
     psp2_deposit_get,
     psp2_deposit_post,
     psp2_withdraw_get,

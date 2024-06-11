@@ -46,6 +46,7 @@
 - [x] 刪除 RPC 相關程式碼
 - [x] 檢查 SCA + 跨機構轉帳功能的 bug 在哪
 - [x] 優化 psp_general 的 SCA & 跨機構轉帳 頁面
+- [ ] FIDO UAF 框架 != 標準, 協定, 規範
 
 ## 參考文章
 - [MySQL 官方文件: 2PC: XA Transaction States](https://dev.mysql.com/doc/refman/8.4/en/xa-states.html)

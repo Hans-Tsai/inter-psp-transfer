@@ -9,58 +9,84 @@
             crossorigin="anonymous"
         />
         <style>
-            body {
+            /* 確保 body 和 html 填滿整個頁面 */
+            body, html {
                 background-color: ivory;
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            /* 中心容器 */
+            .container {
                 display: flex;
                 flex-direction: column;
+                justify-content: center;
                 align-items: center;
-                justify-content: flex-start;
-                height: 100vh;
-                margin: 0;
-                padding-top: 20px;
+                width: 120%; /* 調整此處來控制最大寬度 */
+                max-width: 800px; /* 最大寬度，可根據需要調整 */
+                margin: 0 auto;
+            }
+
+            /* 設置水平排列 */
+            .horizontal-form {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .horizontal-form label {
+                margin-right: 10px;
             }
             
-            .btn {
-                width: 200px;
-                margin-top: 20px;
+
+            button, input, select {
+                margin: 10px;
+            }
+
+            label {
+                font-weight: bold;
             }
         </style>
     </head>
     <body>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/psp_general">首頁</a></li>
-                <li class="breadcrumb-item active" aria-current="page">PSP General</li>
-            </ol>
-        </nav>
         <div class="container">
-            <h2 class="my-4">PSP General (SCA)</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/psp_general">首頁</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">PSP General</li>
+                </ol>
+            </nav>
+            <h2 class="my-4">PSP General (二次身份驗證)</h2>
             <div class="alert alert-warning d-flex align-items-center" role="alert">
-                <!-- <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-                    <use xlink:href="#exclamation-triangle-fill" />
-                </svg> -->
                 <div>
-                    請注意，若您<strong>尚未完成二次身份驗證</strong>，您將無法使用<strong>跨機構轉帳</strong>服務。<br />
-                    請先使用<strong>指紋辨識</strong>進行二次身份驗證。完成後，您即可順利進行跨機構轉帳操作。
+                    請注意，若您<strong>尚未完成二次身份驗證</strong>，將無法使用<strong>跨機構轉帳</strong>服務。<br />
+                    請先使用<strong>指紋辨識</strong>進行二次身份驗證。完成後，即可順利進行跨機構轉帳操作。
                 </div>
             </div>
 
-            <label for="psp">支付服務商: </label>
-            <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
-            <div class="psp err"></div>
-            <label for="username">使用者名稱: </label>
-            <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
-            <div class="username err"></div>
-            <label for="account">使用者帳戶: </label>
-            <input type="text" id="account" value="<%= userInfo.account %>" disabled />
-            <div class="account err"></div>
+            <div class="horizontal-form">
+                <label for="psp">支付服務商: </label>
+                <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
+            </div>
+            <div class="horizontal-form">
+                <label for="username">使用者名稱: </label>
+                <input type="text" id="username" value="<%= userInfo.name %>" autocomplete="username webauthn" disabled />
+            </div>
+            <div class="horizontal-form">
+                <label for="account">使用者帳戶: </label>
+                <input type="text" id="account" value="<%= userInfo.account %>" disabled />
+            </div>
 
             <div>
-                <button type="button" class="btn btn-primary" onclick="location.href='/psp_general/authenticate' + window.location.search">
-                    二次身份驗證-登入
+                <button type="button" class="btn btn-secondary" onclick="location.href='/psp_general/authenticate' + window.location.search">
+                    登入
                 </button>
-                <button type="button" class="btn btn-success" id="verify-register" onclick="location.href='/psp_general/register' + window.location.search">
-                    二次身份驗證-註冊
+                <button type="button" class="btn btn-secondary" id="verify-register" onclick="location.href='/psp_general/register' + window.location.search">
+                    註冊
                 </button>
             </div>
         </div>

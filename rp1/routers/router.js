@@ -25,7 +25,7 @@ router.post('/psp1/authenticate/result', controller.psp1_authenticate_result_pos
 router.get('/psp1/logout', controller.psp1_logout_get);
 
 // 更新 `user.isVerified` (不提供使用者自行更新，僅作為後端更新使用)
-router.post('/psp1/is_sca_verified', cors(corsOptions), controller.psp1_is_sca_verified_post);
+router.post('/psp1/isVerified', cors(corsOptions), controller.psp1_isVerified_post);
 
 router.get('/psp1/deposit', requireAuth, checkUser, controller.psp1_deposit_get);
 router.post('/psp1/deposit', requireAuth, checkUser, controller.psp1_deposit_post);
