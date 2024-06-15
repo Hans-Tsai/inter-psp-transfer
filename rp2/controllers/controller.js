@@ -390,7 +390,7 @@ const psp2_inter_psp_transfer_2pc_rollback_post = async (req, res) => {
     } catch (error) {
         res.status(400).json({ rollback: false, message: `${config.psp} is not rollback for DB 2PC rollback state: ${error.message}` });
     }
-}
+};
 
 
 module.exports = {

@@ -46,7 +46,12 @@
 - [x] 刪除 RPC 相關程式碼
 - [x] 檢查 SCA + 跨機構轉帳功能的 bug 在哪
 - [x] 優化 psp_general 的 SCA & 跨機構轉帳 頁面
-- [ ] FIDO UAF 框架 != 標準, 協定, 規範
+- [ ] FIDO UAF != 框架, 標準, 協定, 規範
+- [x] 補充: localhost 的 origin 設計
+- [x] 論文: 程式碼設計中，補上 localhost origin 切割的方式，以及 openssl 的自發簽證說明，以遵守 Webauthn 要求的 HTTPS 規範
+- [x] 論文: 系統限制包含 origin, 生物辨識的方法, SCA 的適用情境、豁免情境
+- [x] 論文: 修改所有引用，採用 title, subtitle 的表示方式
+- [x] 論文: 思考關於 CORS 的兩張圖片，是否仍需要出現在論文中
 
 ## 參考文章
 - [MySQL 官方文件: 2PC: XA Transaction States](https://dev.mysql.com/doc/refman/8.4/en/xa-states.html)

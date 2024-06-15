@@ -39,3 +39,8 @@ router.post('/psp1/inter_psp_transfer/2pc/commit', cors(corsOptions), controller
 router.post('/psp1/inter_psp_transfer/2pc/rollback', cors(corsOptions), controller.psp1_inter_psp_transfer_2pc_rollback_post);
 
 module.exports = router;
+
+
+
+
+

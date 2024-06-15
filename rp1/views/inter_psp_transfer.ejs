@@ -129,19 +129,7 @@
             const amount = document.getElementById("amount").value;
             const note = document.getElementById("note").value;
 
-            const params = {
-                psp,
-                name,
-                account,
-                fromPSP,
-                from,
-                toPSP,
-                to,
-                balance,
-                amount,
-                note,
-            };
-
+            const params = { psp, name, account, fromPSP, from, toPSP, to, balance, amount, note };
             const queryString = new URLSearchParams(params).toString();
             location.href = `https://rp-general.localhost:1000/psp_general/sca_inter_psp_transfer?${queryString}`;
         }

@@ -30,3 +30,5 @@ router.post('/psp_general/sca_inter_psp_transfer/authenticate/result', controlle
 router.post('/psp_general/sca_inter_psp_transfer', controller.psp_general_sca_inter_psp_transfer_post);
 
 module.exports = router;
+
+

@@ -59,17 +59,7 @@ const psp_general_register_get = async (req, res) => {
 
 const psp_general_register_options_post = async (req, res) => {
     try {
-        let {
-            psp,
-            account,
-            username,
-            user_verification,
-            attestation,
-            attachment,
-            algorithms,
-            discoverable_credential,
-            hints,
-        } = req.body;
+        let { psp, account, username, user_verification, attestation, attachment, algorithms, discoverable_credential, hints } = req.body;
         const userAuthenticators = await AuthenticatorModel.getUserAuthenticators({ psp, account, username });
         let residentKey = "";
         switch (discoverable_credential) {
@@ -102,22 +92,15 @@ const psp_general_register_options_post = async (req, res) => {
             rpID: config.rp_general.id,
             userID: account,
             userName: username,
-            // Don't prompt users for additional information about the authenticator
-            // (Recommended for smoother UX)
             attestationType: attestation,
-            // Prevent users from re-registering existing authenticators
             excludeCredentials: userAuthenticators.map((authenticator) => ({
                 id: base64url.toBuffer(authenticator.credentialID),
                 type: "public-key",
-                // Optional
                 transports: authenticator.transports,
             })),
-            // See "Guiding use of authenticators via authenticatorSelection" below
             authenticatorSelection: {
-                // Defaults
                 residentKey,
                 userVerification: user_verification,
-                // Optional
                 authenticatorAttachment: attachment,
             },
             supportedAlgorithmIDs: algorithms,
@@ -147,8 +130,7 @@ const psp_general_register_result_post = async (req, res) => {
         const { verified } = verification;
         if (verified) {
             const { registrationInfo } = verification;
-            const { credentialPublicKey, credentialID, counter, credentialDeviceType, credentialBackedUp } =
-                registrationInfo;
+            const { credentialPublicKey, credentialID, counter, credentialDeviceType, credentialBackedUp } = registrationInfo;
             const base64urlCredentialID = base64url.encode(credentialID);
             const base64urlCredentialPublicKey = base64url.encode(credentialPublicKey);
             try {
@@ -203,7 +185,6 @@ const psp_general_authenticate_options_post = async (req, res) => {
         const options = await SimpleWebAuthnServer.generateAuthenticationOptions({
             rpID: config.rp_general.id,
             userVerification,
-            // Require users to use a previously-registered authenticator
             allowCredentials: userAuthenticators.map((authenticator) => ({
                 id: base64url.toBuffer(authenticator.credentialID),
                 type: "public-key",
@@ -224,7 +205,7 @@ const psp_general_authenticate_result_post = async (req, res) => {
         const { asseResp, psp, account, username } = req.body;
         const expectedChallenge = await redis.db1.getUserCurrentChallenge(redis.client, account);
         let authenticator = await AuthenticatorModel.getUserAuthenticator({
-            psp, 
+            psp,
             account,
             username,
             credentialID: asseResp.id,
@@ -268,7 +249,6 @@ const psp_general_sca_inter_psp_transfer_authenticate_options_post = async (req,
         const options = await SimpleWebAuthnServer.generateAuthenticationOptions({
             rpID: config.rp_general.id,
             userVerification,
-            // Require users to use a previously-registered authenticator
             allowCredentials: userAuthenticators.map((authenticator) => ({
                 id: base64url.toBuffer(authenticator.credentialID),
                 type: "public-key",
@@ -290,7 +270,7 @@ const psp_general_sca_inter_psp_transfer_authenticate_result_post = async (req, 
         const { asseResp, psp, account, username } = req.body;
         const expectedChallenge = await redis.db2.getUserCurrentChallenge(redis.client, account);
         let authenticator = await AuthenticatorModel.getUserAuthenticator({
-            psp, 
+            psp,
             account,
             username,
             credentialID: asseResp.id,
@@ -328,14 +308,16 @@ const psp_general_sca_inter_psp_transfer_post = async (req, res) => {
         if (!Number.isInteger(Number(amount))) throw new Error("轉帳金額必須是整數");
         if (Number(amount) > Number(balance)) throw new Error("餘額不足");
         if (Number(from) === Number(to)) throw new Error("不能轉帳給自己");
-        
+
         xaId_psp1 = "xa_" + randomXAId();
         xaId_psp2 = "xa_" + randomXAId();
         xaTransactionStarted = true;
 
         // 2PC prepare
-        const psp1_prepared_result = await axiosInstance.post("https://rp1.localhost:3000/psp1/inter_psp_transfer/2pc/prepare", { fromPSP, from, toPSP, to, balance, amount, note, xaId: xaId_psp1 });
-        const psp2_prepared_result = await axiosInstance.post("https://rp2.localhost:4000/psp2/inter_psp_transfer/2pc/prepare", { fromPSP, from, toPSP, to, balance, amount, note, xaId: xaId_psp2 });
+        const psp1_prepared_result = await axiosInstance.post("https://rp1.localhost:3000/psp1/inter_psp_transfer/2pc/prepare",
+                                                                { fromPSP, from, toPSP, to, balance, amount, note, xaId: xaId_psp1 });
+        const psp2_prepared_result = await axiosInstance.post("https://rp2.localhost:4000/psp2/inter_psp_transfer/2pc/prepare",
+                                                                { fromPSP, from, toPSP, to, balance, amount, note, xaId: xaId_psp2 });
         if (!psp1_prepared_result.data.prepared || !psp2_prepared_result.data.prepared) throw new Error("2PC prepare failed");
         // 2PC commit
         const psp1_commit_result = await axiosInstance.post("https://rp1.localhost:3000/psp1/inter_psp_transfer/2pc/commit", { xaId: xaId_psp1 });

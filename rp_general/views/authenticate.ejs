@@ -114,8 +114,6 @@
                 let authUserVerification = document.getElementById("optAuthUserVerification").value;
 
                 const { startAuthentication } = SimpleWebAuthnBrowser;
-                // GET authentication options from the endpoint that calls
-                // @simplewebauthn/server -> generateAuthenticationOptions()
                 const resp = await fetch("/psp_general/authenticate/options", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -126,7 +124,6 @@
                         userVerification: authUserVerification,
                     }),
                 });
-                // Pass the options to the authenticator and wait for a response
                 const asseRespJSON = await resp.json();
                 console.log("AUTHENTICATION OPTIONS");
                 console.log(JSON.stringify(asseRespJSON, null, 2));
@@ -135,8 +132,6 @@
                 console.log("AUTHENTICATION RESPONSE");
                 console.log(JSON.stringify(asseResp, null, 2));
 
-                // POST the response to the endpoint that calls
-                // @simplewebauthn/server -> verifyAuthenticationResponse()
                 const verificationResp = await fetch("/psp_general/authenticate/result", {
                     method: "POST",
                     headers: {
@@ -149,7 +144,6 @@
                         username,
                     }),
                 });
-                // Wait for the results of verification
                 const verificationJSON = await verificationResp.json();
                 if (verificationJSON && verificationJSON.verified) {
                     window.alert("Authentication successful!");
