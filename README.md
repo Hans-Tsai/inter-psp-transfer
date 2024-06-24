@@ -36,9 +36,38 @@
 ![嚴格顧客驗證](./images/sca_sequence_diagram.drawio.png)
 ![跨機構轉帳-兩階段提交](./images/2pc_sequence_diagram.drawio.png)
 
+## 補充: FIDO Passkey 未來研究方向
+- 目前 FIDO 在理論研究上雖然已逐漸完善，但實際生活中仍有許多情境值得考量導入 FIDO 驗證機制
+- 參考 FIDO 通行密鑰（Passkey）官方使用情境，以下為提出未來可能的研究方向，期望 FIDO 在未來能夠更廣泛應用於各種場景，能提升整體資訊安全，以及使用者便利性
+
+### 使用者
+- 在使用者方面，FIDO 的應用能<strong>提升使用者在日常數位生活中的安全性與便利性</strong>
+- 未來研究可著重於<strong>如何優化 FIDO 認證技術在各種使用者裝置上的應用</strong>，包括智慧型手機、平板電腦、智慧型家電用品
+- 尤其是<strong>如何運用 FIDO 通行密鑰來取代傳統密碼</strong>，使得消費者在網購、社交媒體及日常應用中的<strong>登入過程更加簡便且安全</strong>
+- 此外，<strong>針對不同年齡層和技術接受度的使用者群體，開發更友善、更易操作的 FIDO 認證介面</strong>也是未來研究的重點
+
+### 企業
+- 在企業環境中，FIDO 認證可以<strong>有效提升內部系統及數據的安全性，並簡化員工的身份驗證過程</strong>
+- 未來研究應聚焦於<strong>如何在企業中廣泛應用 FIDO 認證技術</strong>，包括員工登入公司內部系統、遠端工作、存取機敏資料時的相關資訊安全措施
+- 此外，還可以探討<strong>如何結合 FIDO 認證與現有的企業安全架構</strong>，例如: 零信任架構，以打造更完整的安全生態系統
+- 同時，如何<strong>降低企業實施 FIDO 認證的成本及技術門檻，使得中小企業也能夠受益於這一技術</strong>，亦是未來研究的重要方向
+
+### 政府
+- 對於政府部門，FIDO 認證技術能<strong>提升公共服務的安全性與效率</strong>
+- 未來研究可以<strong>探討 FIDO 認證在政府服務中的應用</strong>，包括身份認證、資料保護、數位簽名等方面
+- 舉例來說，當<strong>建置 MyData 平台</strong>時，<strong>如何運用 FIDO 認證來保障安全地使用或共享個人資料，確保個人資料的隱私性和安全性</strong>，是一個重要的研究課題
+- 政府部門還可以透過<strong>制定標準和政策</strong>，推動 FIDO 認證技術在更多領域的應用，以提升整體社會的數位安全水平
+
+### 支付
+- 在金融領域，FIDO 技術能<strong>提升支付交易的安全性與使用者體驗</strong>
+- 未來研究可以探討該<strong>如何進一步應用 FIDO 技術於各種支付場景中</strong>，例如: 線上支付、移動支付、跨境支付
+- 研究應著重於<strong>如何在支付過程中運用 FIDO 進行快速且安全的身份驗證，並且在降低詐騙風險的同時，提升使用者的支付體驗</strong>
+- 此外，<strong>應考量如何將 FIDO 與其他技術結合</strong>，形成一個更全面的金融安全解決方案
+
 ## 參考文章
 - [MySQL 官方文件: 2PC: XA Transaction States](https://dev.mysql.com/doc/refman/8.4/en/xa-states.html)
 - [資料庫層擴展難題 - MySQL 分散式事務處理](https://mark-lin.com/posts/20190928/)
 - [Chrome for Developers: SPC + Transaction Confirmation (透過安全付款確認機制進行驗證)](https://developer.chrome.com/docs/payments/authenticate-secure-payment-confirmation?hl=zh-tw)
 - [Chrome for Developers: SPC + Transaction Confirmation (註冊安全付款確認)](https://developer.chrome.com/docs/payments/register-secure-payment-confirmation?hl=zh-tw)
 - [Chrome for Developers: SPC + Transaction Confirmation (安全付款確認)](https://developer.chrome.com/docs/payments/secure-payment-confirmation?hl=zh-tw)
+- [FIDO: Passkey Use Cases](https://fidoalliance.org/passkey-use-case/)
