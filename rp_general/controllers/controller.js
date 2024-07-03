@@ -237,11 +237,16 @@ const psp_general_authenticate_result_post = async (req, res) => {
 };
 
 const psp_general_sca_inter_psp_transfer_get = async (req, res) => {
-    const userInfo = await verify(req.query.userInfo, config.server_general.jwt_secret);
-    const trxDetails = await verify(req.query.trxDetails, config.server_general.jwt_secret);
-    const queryString = { userInfo, trxDetails };
-
-    res.render("sca_inter_psp_transfer", { queryString });
+    try {
+        const userInfo = await verify(req.query.userInfo, config.server_general.jwt_secret);
+        const trxDetails = await verify(req.query.trxDetails, config.server_general.jwt_secret);
+        const queryString = { userInfo, trxDetails };
+    
+        res.render("sca_inter_psp_transfer", { queryString });
+    } catch (error) {
+        const err = handleErrors(error);
+        res.status(400).json(err);
+    }
 };
 
 const psp_general_sca_inter_psp_transfer_authenticate_options_post = async (req, res) => {
