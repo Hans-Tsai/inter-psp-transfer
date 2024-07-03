@@ -14,6 +14,36 @@
 - 此系統實踐嚴格顧客驗證的安全機制，旨在提升支付服務商間交易的安全性
 
 ## 系統架構
+### OpenSSL 自發證書
+- 設定本地端 `/etc/hosts` 的 DNS 文件
+    ```
+    # FIDO Inter-PSP Transfer
+    127.0.0.1 rp1.localhost
+    127.0.0.1 rp2.localhost
+    127.0.0.1 rp-general.localhost
+    ```
+
+- 在本地端開發環境，使用 OpenSSL 自發證書
+    - 建立 RSA 私鑰 (private key)
+        ```bash
+        openssl genrsa -out openssl.key 2048
+        ```
+
+    - 建立自發簽名請求的檔案 (CSR)
+        ```bash
+        openssl req -new -key openssl.key -out openssl.csr -config openssl.conf
+        ```
+
+    - 建立自發證書 (Certificate)
+        ```bash
+        openssl x509 -req -in openssl.csr -signkey openssl.key -out openssl.crt -days 365 -sha256 -extfile openssl.conf -extensions v3_req
+        ```
+
+- macOS 設定自發證書 (CA) 永遠信任
+    - 將自發證書 (CA) 複製到<strong>鑰匙圈存取</strong>
+        -  `/Library/Keychains/System.keychain`
+    - 開啟鑰匙圈存取的目錄，找到自發證書 (CA)，點選右鍵選擇「信任」，並設定為 **「永遠信任」**
+
 ### 支付服務商 (PSP)
 - rp_general: https://rp-general.localhost:1000/psp_general
 - rp1: https://rp1.localhost:3000/psp1

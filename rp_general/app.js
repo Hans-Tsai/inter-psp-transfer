@@ -29,8 +29,8 @@ function startServer() {
     server = https
         .createServer(
             {
-                key: fs.readFileSync("mydomain.key"),
-                cert: fs.readFileSync("mydomain.crt"),
+                key: fs.readFileSync("openssl.key"),
+                cert: fs.readFileSync("openssl.crt"),
             },
             app
         )

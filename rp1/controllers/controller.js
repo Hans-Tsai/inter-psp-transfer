@@ -20,9 +20,7 @@ const handleErrors = (error) => {
 const maxValidDuration = 3 * 24 * 60 * 60; // 3 days
 const createToken = ({ account, username }) => {
     const psp = config.psp;
-    return jwt.sign({ psp, account, username }, config.server1.jwt_secret, {
-        expiresIn: maxValidDuration,
-    });
+    return jwt.sign({ psp, account, username }, config.server1.jwt_secret, { expiresIn: maxValidDuration });
 };
 
 //#endregion
@@ -204,7 +202,9 @@ const psp1_authenticate_result_post = async (req, res) => {
         const userJwt = createToken({ account, username });
         res.cookie(`${username}_userJwt`, userJwt, {
             httpOnly: true,
-            maxAge: maxValidDuration * 1000,
+            secure: true,
+            sameSite: "none",
+            // domain: ".localhost",
         });
 
         res.status(200).json({ verified });
@@ -333,6 +333,32 @@ const psp1_inter_psp_transfer_get = (req, res) => {
     }
 };
 
+const psps1_user_and_trx_details_token_post = async (req, res) => {
+    try {
+        let userInfo = {
+            psp: req.body.psp,
+            name: req.body.name,
+            account: req.body.account,
+        };
+        let trxDetails = {
+            fromPSP: req.body.fromPSP,
+            from: req.body.from,
+            toPSP: req.body.toPSP,
+            to: req.body.to,
+            balance: req.body.balance,
+            amount: req.body.amount,
+            note: req.body.note,
+        };
+        userInfo = jwt.sign(userInfo, config.server1.jwt_secret, { expiresIn: maxValidDuration });
+        trxDetails = jwt.sign(trxDetails, config.server1.jwt_secret, { expiresIn: maxValidDuration });
+
+        res.status(200).json({ userInfo, trxDetails });
+    } catch (error) {
+        const err = handleErrors(error);
+        res.status(400).json(err);
+    }
+};
+
 const psp1_inter_psp_transfer_2pc_prepare_post = async (req, res) => {
     const { fromPSP, from, toPSP, to, balance, amount, note, xaId } = req.body;
     let status = false;
@@ -399,6 +425,7 @@ module.exports = {
     psp1_transfer_get,
     psp1_transfer_post,
     psp1_inter_psp_transfer_get,
+    psps1_user_and_trx_details_token_post,
     psp1_inter_psp_transfer_2pc_prepare_post,
     psp1_inter_psp_transfer_2pc_commit_post,
     psp1_inter_psp_transfer_2pc_rollback_post,

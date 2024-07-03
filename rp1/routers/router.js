@@ -34,6 +34,7 @@ router.post('/psp1/withdraw', requireAuth, checkUser, controller.psp1_withdraw_p
 router.get('/psp1/transfer', requireAuth, checkUser, controller.psp1_transfer_get);
 router.post('/psp1/transfer', requireAuth, checkUser, controller.psp1_transfer_post);
 router.get('/psp1/inter_psp_transfer', requireAuth, checkUser, controller.psp1_inter_psp_transfer_get);
+router.post('/psp1/user_and_trx_details_token', requireAuth, checkUser, controller.psps1_user_and_trx_details_token_post);
 router.post('/psp1/inter_psp_transfer/2pc/prepare', cors(corsOptions), controller.psp1_inter_psp_transfer_2pc_prepare_post);
 router.post('/psp1/inter_psp_transfer/2pc/commit', cors(corsOptions), controller.psp1_inter_psp_transfer_2pc_commit_post);
 router.post('/psp1/inter_psp_transfer/2pc/rollback', cors(corsOptions), controller.psp1_inter_psp_transfer_2pc_rollback_post);

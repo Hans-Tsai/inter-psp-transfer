@@ -26,7 +26,7 @@ let config = {
         protocol: "https",
         domain: process.env.SERVER2_DOMAIN || "rp2.localhost",
         port: process.env.SERVER2_PORT || 4000,
-        jwt_secret: process.env.JWT_SECRET || "fido_uaf",
+        jwt_secret: process.env.JWT_SECRET || "fido",
     },
     // Relying Party Server (rp2)
     rp2: {

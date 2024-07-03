@@ -13,6 +13,8 @@ const path = require("path");
 const fs = require("fs");
 const https = require("https");
 const axios = require("axios");
+const util = require("util");
+const verify = util.promisify(jwt.verify);
 
 //#region 工具函式
 // 專門產生錯誤事件的物件(=> err object)的錯誤事件處理函數
@@ -30,7 +32,7 @@ const createToken = ({ psp, account, username }) => {
 };
 
 // 使用自發簽名證書
-const httpsAgent = new https.Agent({ ca: fs.readFileSync(path.join(__dirname, '../mydomain.crt')) });
+const httpsAgent = new https.Agent({ ca: fs.readFileSync(path.join(__dirname, '../openssl.crt')) });
 const axiosInstance = axios.create({ httpsAgent });
 
 //#endregion
@@ -234,9 +236,12 @@ const psp_general_authenticate_result_post = async (req, res) => {
     }
 };
 
-const psp_general_sca_inter_psp_transfer_get = (req, res) => {
-    const params = req.query;
-    res.render("sca_inter_psp_transfer", { params });
+const psp_general_sca_inter_psp_transfer_get = async (req, res) => {
+    const userInfo = await verify(req.query.userInfo, config.server_general.jwt_secret);
+    const trxDetails = await verify(req.query.trxDetails, config.server_general.jwt_secret);
+    const queryString = { userInfo, trxDetails };
+
+    res.render("sca_inter_psp_transfer", { queryString });
 };
 
 const psp_general_sca_inter_psp_transfer_authenticate_options_post = async (req, res) => {

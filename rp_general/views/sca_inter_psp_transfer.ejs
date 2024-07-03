@@ -63,15 +63,15 @@
                 <tbody>
                     <tr>
                         <th class="table-warning" style="width: 60%;">支付服務商(psp): </th>
-                        <td id="psp"><%= params.psp %></td>
+                        <td id="psp"><%= queryString.userInfo.psp %></td>
                     </tr>
                     <tr>
                         <th class="table-warning">使用者名稱(name): </th>
-                        <td id="username"><%= params.name %></td>
+                        <td id="username"><%= queryString.userInfo.name %></td>
                     </tr>
                     <tr>
                         <th class="table-warning">使用者帳戶(account): </th>
-                        <td id="account"><%= params.account %></td>
+                        <td id="account"><%= queryString.userInfo.account %></td>
                     </tr>
                 </tbody>
             </table>
@@ -106,31 +106,31 @@
                 <tbody>
                     <tr>
                         <th class="table-success" style="width: 60%;">來源支付服務商(fromPSP): </th>
-                        <td id="fromPSP"><%= params.fromPSP %></td>
+                        <td id="fromPSP"><%= queryString.trxDetails.fromPSP %></td>
                     </tr>
                     <tr>
                         <th class="table-success">來源支付服務商的使用者帳號(from): </th>
-                        <td id="from"><%= params.from %></td>
+                        <td id="from"><%= queryString.trxDetails.from %></td>
                     </tr>
                     <tr>
                         <th class="table-success">目標支付服務商(toPSP):</th>
-                        <td id="toPSP"><%= params.toPSP %></td>
+                        <td id="toPSP"><%= queryString.trxDetails.toPSP %></td>
                     </tr>
                     <tr>
                         <th class="table-success">目標支付服務商的使用者帳號(to): </th>
-                        <td id="to"><%= params.to %></td>
+                        <td id="to"><%= queryString.trxDetails.to %></td>
                     </tr>
                     <tr>
                         <th class="table-success">當前餘額(balance): </th>
-                        <td id="balance"><%= params.balance %></td>
+                        <td id="balance"><%= queryString.trxDetails.balance %></td>
                     </tr>
                     <tr>
                         <th class="table-success">跨機構轉帳金額(amount): </th>
-                        <td id="amount"><%= params.amount %></td>
+                        <td id="amount"><%= queryString.trxDetails.amount %></td>
                     </tr>
                     <tr>
                         <th class="table-success">備註(note): </th>
-                        <td id="note"><%= params.note %></td>
+                        <td id="note"><%= queryString.trxDetails.note %></td>
                     </tr>
                 </tbody>
             </table>

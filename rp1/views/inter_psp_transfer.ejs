@@ -130,8 +130,23 @@
             const note = document.getElementById("note").value;
 
             const params = { psp, name, account, fromPSP, from, toPSP, to, balance, amount, note };
-            const queryString = new URLSearchParams(params).toString();
-            location.href = `https://rp-general.localhost:1000/psp_general/sca_inter_psp_transfer?${queryString}`;
+            const user_and_trx_details_token_result = await fetch("https://rp1.localhost:3000/psp1/user_and_trx_details_token", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(params),
+            });
+
+            if (user_and_trx_details_token_result.ok) {
+                const res = await user_and_trx_details_token_result.json();
+                const userInfoEncoded = encodeURIComponent(res.userInfo);
+                const trxDetailsEncoded = encodeURIComponent(res.trxDetails);
+                const queryString = `userInfo=${userInfoEncoded}&trxDetails=${trxDetailsEncoded}`;
+                location.href = `https://rp-general.localhost:1000/psp_general/sca_inter_psp_transfer?${queryString}`;
+            } else {
+                window.alert("跨機構轉帳失敗");
+                location.reload();
+            }
+
         }
     </script>
 </html>

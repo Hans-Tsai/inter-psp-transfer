@@ -215,7 +215,6 @@ const psp2_authenticate_result_post = async (req, res) => {
         const userJwt = createToken({ account, username });
         res.cookie(`${username}_userJwt`, userJwt, {
             httpOnly: true,
-            maxAge: maxValidDuration * 1000, // 以毫秒為單位
         });
 
         res.status(200).json({ verified });
