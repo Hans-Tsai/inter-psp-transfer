@@ -121,7 +121,7 @@
     </body>
 </html>
 <script>
-    function verify(userInfo) {
+    async function verify(userInfo) {
         try {
                 if (!userInfo.isVerified) {
                     const params = {
@@ -130,8 +130,22 @@
                         account: JSON.parse(userInfo).account,
                         isVerified: JSON.parse(userInfo).isVerified,
                     };
-                    const queryString = new URLSearchParams(params).toString();
-                    location.href = `https://rp-general.localhost:1000/psp_general?${queryString}`;
+
+                    const userInfo_token_result = await fetch("https://rp1.localhost:3000/psp1/userInfo_token", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(params),
+                    });
+
+                    if (userInfo_token_result.ok) {
+                        const res = await userInfo_token_result.json();
+                        const userInfoEncoded = encodeURIComponent(res.userInfo);
+                        const queryString = `userInfo=${userInfoEncoded}`;
+                        location.href = `https://rp-general.localhost:1000/psp_general?${queryString}`;
+                    } else {
+                        window.alert("二次身份註冊與驗證失敗");
+                        location.reload();
+                    }
                 }
                 
             } catch (err) {

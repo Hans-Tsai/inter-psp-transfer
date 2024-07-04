@@ -321,6 +321,23 @@ const psp1_transfer_post = async (req, res) => {
     }
 };
 
+const psp1_userInfo_token_post = async (req, res) => {
+    try {
+        let userInfo = {
+            psp: req.body.psp,
+            name: req.body.name,
+            account: req.body.account,
+            isVerified: req.body.isVerified,
+        };
+        userInfo = jwt.sign(userInfo, config.server1.jwt_secret, { expiresIn: maxValidDuration });
+
+        res.status(200).json({ userInfo });
+    } catch (error) {
+        const err = handleErrors(error);
+        res.status(400).json(err);
+    }
+};
+
 const psp1_inter_psp_transfer_get = (req, res) => {
     let params = res.locals.userInfo;
     let queryString = qs.stringify(params);
@@ -424,6 +441,7 @@ module.exports = {
     psp1_withdraw_post,
     psp1_transfer_get,
     psp1_transfer_post,
+    psp1_userInfo_token_post,
     psp1_inter_psp_transfer_get,
     psps1_user_and_trx_details_token_post,
     psp1_inter_psp_transfer_2pc_prepare_post,

@@ -38,7 +38,8 @@ const axiosInstance = axios.create({ httpsAgent });
 //#endregion
 
 const psp_general_get = async (req, res) => {
-    const userInfo = req.query;
+    const userInfo = await verify(req.query.userInfo, config.server_general.jwt_secret);
+
     res.render("index", { userInfo });
 };
 
@@ -55,7 +56,8 @@ const psp_general_psp_list_get = async (req, res) => {
 };
 
 const psp_general_register_get = async (req, res) => {
-    const userInfo = req.query;
+    const userInfo = await verify(req.query.userInfo, config.server_general.jwt_secret);
+
     res.render("register", { userInfo });
 };
 
@@ -176,7 +178,8 @@ const psp_general_register_result_post = async (req, res) => {
 };
 
 const psp_general_authenticate_get = async (req, res) => {
-    const userInfo = req.query;
+    const userInfo = await verify(req.query.userInfo, config.server_general.jwt_secret);
+    
     res.render("authenticate", { userInfo });
 };
 
