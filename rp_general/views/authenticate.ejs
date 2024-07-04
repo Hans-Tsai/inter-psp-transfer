@@ -54,7 +54,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>PSP General (二次身份驗證)</h1>
+            <h1>PSP General (二次身份註冊與驗證)</h1>
             <div class="horizontal-form">
                 <label for="psp">支付服務商: </label>
                 <input type="text" id="psp" value="<%= userInfo.psp %>" disabled />
@@ -168,14 +168,14 @@
                         body: JSON.stringify({ psp, account, isVerified: true }),
                     });
                     if (response.status == 200) {
-                        window.alert("二次身份驗證 已通過!");
+                        window.alert("二次身份註冊與驗證 已通過!");
                         location.assign(`https://${domainName}:${port}/${psp}`);
                     } else {
                         const res = await response.json();
                         throw new Error(res.message);
                     }
                 } else {
-                    window.alert("二次身份驗證 失敗!");
+                    window.alert("二次身份註冊與驗證 失敗!");
                     location.reload();
                 }
             } catch (error) {

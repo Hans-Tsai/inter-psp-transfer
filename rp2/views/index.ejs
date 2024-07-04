@@ -87,7 +87,7 @@
                     <div class="col-sm d-flex">
                         <div class="card text-white bg-warning mb-3 flex-fill d-flex flex-column" title="跨機構轉帳之前，需先進行嚴格顧客驗證">
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">二次身份驗證狀態</h5>
+                                <h5 class="card-title">二次身份註冊與驗證狀態</h5>
                                 <div class="d-flex flex-column justify-content-center align-items-center fl" style="padding: 20px;">
                                     <div class="d-flex justify-content-start align-items-center">
                                         <input class="form-check-input large_checkbox" type="checkbox" value="" id="isVerified" disabled <%= userInfo.isVerified ? 'checked' : '' %>>
@@ -105,9 +105,9 @@
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="僅限同機構的用戶之間轉帳" onclick="location.href='/psp2/transfer'">轉帳</button>
                 <button type="button" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="可跨機構的用戶之間轉帳" onclick="location.href='/psp2/inter_psp_transfer'">跨機構轉帳</button>
                 <% if(!userInfo.isVerified) { %>
-                    <button type="button" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="二次身份驗證" onclick="verify('<%= JSON.stringify(userInfo) %>')">二次身份驗證</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="二次身份註冊與驗證" onclick="verify('<%= JSON.stringify(userInfo) %>')">二次身份註冊與驗證</button>
                     <% } else { %>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="二次身份驗證" disabled>二次身份驗證 (已驗證)</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="二次身份註冊與驗證" disabled>二次身份註冊與驗證 (已驗證)</button>
                 <% } %>
             </div>
         </div>

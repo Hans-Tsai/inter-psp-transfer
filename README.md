@@ -59,8 +59,8 @@
 #### 系統認證
 ![系統認證流程](./images/fido_uaf_authentication_sequence_diagram.drawio.png)
 
-#### 二次身份驗證
-![二次身份驗證](./images/second_verification_sequence_diagram.drawio.png)
+#### 二次身份註冊與驗證
+![二次身份註冊與驗證](./images/second_verification_sequence_diagram.drawio.png)
 
 #### 嚴格顧客驗證與跨機構轉帳
 ![嚴格顧客驗證](./images/sca_sequence_diagram.drawio.png)
